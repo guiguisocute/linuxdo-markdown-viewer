@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Linux.do 帖子源码一键查看复制 (兼容IDCFlare)
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      1.0.2
 // @description  在 Linux.do 或 IDCFlare.com的每个帖子旁添加一个按钮,点击即可查看该帖子的 Markdown 源码,支持一键复制和转化图片url为外链以及保留标题作者信息等功能,提升内容获取效率。
 // @author       guiguisocute
 // @homepage     https://github.com/guiguisocute/linuxdo-markdown-viewer#readme
@@ -525,9 +525,29 @@
                     localStorage.getItem('linuxdo-raw-keep-meta') === null ? CONFIG.defaultKeepMeta : localStorage.getItem('linuxdo-raw-keep-meta') === 'true'
                 );
                 
-                // 监听复选框变化，保存用户偏好
+                // 保存原始文本用于切换
+                const originalRawText = text;
+                let textarea;
+                
+                // 更新文本框内容的函数
+                const updateTextareaContent = () => {
+                    if (!textarea) return;
+                    if (checkImg.input.checked) {
+                        textarea.value = fixImageUrlsInText(originalRawText, cookedContent);
+                    } else {
+                        textarea.value = originalRawText;
+                    }
+                    // 自动调整高度
+                    if (CONFIG.autoResizeTextarea) {
+                        textarea.style.height = 'auto';
+                        textarea.style.height = (textarea.scrollHeight + 10) + 'px';
+                    }
+                };
+                
+                // 监听复选框变化，保存用户偏好并实时更新内容
                 checkImg.input.addEventListener('change', () => {
                     localStorage.setItem('linuxdo-raw-fix-img', checkImg.input.checked);
+                    updateTextareaContent();
                 });
                 checkMeta.input.addEventListener('change', () => {
                     localStorage.setItem('linuxdo-raw-keep-meta', checkMeta.input.checked);
@@ -541,14 +561,8 @@
                 copyBtn.innerHTML = `${ICONS.COPY} 复制`;
                 copyBtn.title = "复制源码到剪贴板";
 
-                let textarea;
-
                 copyBtn.onclick = async () => {
                     let textToCopy = textarea.value;
-
-                    if (checkImg.input.checked) {
-                        textToCopy = fixImageUrlsInText(textToCopy, cookedContent);
-                    }
                     
                     if (checkMeta.input.checked) {
                         const title = getTopicTitle();
@@ -584,12 +598,18 @@
                 // Textarea
                 textarea = document.createElement('textarea');
                 textarea.className = 'linuxdo-raw-textarea';
-                textarea.value = text;
                 textarea.spellcheck = false;
                 textarea.readOnly = true;
 
                 wrapper.appendChild(header);
                 wrapper.appendChild(textarea);
+                
+                // 根据复选框状态设置初始内容（不调整高度，高度在添加到DOM后调整）
+                if (checkImg.input.checked) {
+                    textarea.value = fixImageUrlsInText(originalRawText, cookedContent);
+                } else {
+                    textarea.value = originalRawText;
+                }
 
                 if (cookedContent) {
                     cookedContent.parentNode.insertBefore(wrapper, cookedContent.nextSibling);
@@ -597,7 +617,8 @@
                 } else {
                     postContainer.appendChild(wrapper);
                 }
-
+                
+                // 在添加到 DOM 后调整高度
                 if (CONFIG.autoResizeTextarea) {
                     textarea.style.height = 'auto';
                     textarea.style.height = (textarea.scrollHeight + 10) + 'px';
