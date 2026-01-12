@@ -2,12 +2,18 @@
 // @name         LINUXDO 帖子源码一键查看复制
 // @namespace    http://tampermonkey.net/
 // @version      1.0.0
-// @description  在 LinuxDo 论坛的每个帖子旁添加一个按钮，点击即可查看该帖子的 Markdown 源码，支持一键复制和转化图片url为外链以及保留标题作者信息等功能，提升内容获取效率。
-// @author       Gemini & & Claude & guiguisocute
+// @description  在 LinuxDo 论坛的每个帖子旁添加一个按钮,点击即可查看该帖子的 Markdown 源码,支持一键复制和转化图片url为外链以及保留标题作者信息等功能,提升内容获取效率。
+// @author       guiguisocute
+// @homepage     https://github.com/guiguisocute/linuxdo-markdown-viewer#readme
+// @homepageURL  https://github.com/guiguisocute/linuxdo-markdown-viewer
+// @supportURL   https://github.com/guiguisocute/linuxdo-markdown-viewer/issues
+// @updateURL    https://raw.githubusercontent.com/guiguisocute/linuxdo-markdown-viewer/main/linuxdo-markdown-viewer.user.js
+// @downloadURL  https://raw.githubusercontent.com/guiguisocute/linuxdo-markdown-viewer/main/linuxdo-markdown-viewer.user.js
 // @match        https://linux.do/t/*
 // @icon         https://linux.do/uploads/default/original/3X/9/d/9dd49731091ce8656e94433a26a3ef36062b3994.png
 // @grant        GM_addStyle
 // @grant        GM_setClipboard
+// @license      MIT
 // ==/UserScript==
 
 (function () {
