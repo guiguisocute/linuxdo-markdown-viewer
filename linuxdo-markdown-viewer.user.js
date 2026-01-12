@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         LINUXDO 帖子源码一键查看复制
+// @name         Linux.do 帖子源码一键查看复制 (兼容IDCFlare)
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
-// @description  在 LinuxDo 论坛的每个帖子旁添加一个按钮,点击即可查看该帖子的 Markdown 源码,支持一键复制和转化图片url为外链以及保留标题作者信息等功能,提升内容获取效率。
+// @version      1.0.1
+// @description  在 Linux.do 或 IDCFlare.com的每个帖子旁添加一个按钮,点击即可查看该帖子的 Markdown 源码,支持一键复制和转化图片url为外链以及保留标题作者信息等功能,提升内容获取效率。
 // @author       guiguisocute
 // @homepage     https://github.com/guiguisocute/linuxdo-markdown-viewer#readme
 // @homepageURL  https://github.com/guiguisocute/linuxdo-markdown-viewer
@@ -10,6 +10,8 @@
 // @updateURL    https://raw.githubusercontent.com/guiguisocute/linuxdo-markdown-viewer/main/linuxdo-markdown-viewer.user.js
 // @downloadURL  https://raw.githubusercontent.com/guiguisocute/linuxdo-markdown-viewer/main/linuxdo-markdown-viewer.user.js
 // @match        https://linux.do/t/*
+// @match        https://idcflare.com/t/*
+// @match        https://www.idcflare.com/t/*
 // @icon         https://linux.do/uploads/default/original/3X/9/d/9dd49731091ce8656e94433a26a3ef36062b3994.png
 // @grant        GM_addStyle
 // @grant        GM_setClipboard
@@ -299,10 +301,10 @@
     }
 
     function getTopicTitle() {
-        // 直接从标签页标题获取，格式：标题 - Linux Do
+        // 直接从标签页标题获取，格式：标题 - 站点名
         const pageTitle = document.title;
-        // 移除后缀 " - Linux Do" 或其他可能的后缀
-        return pageTitle.split(' - ')[0].trim() || document.querySelector('.fancy-title')?.innerText.trim() || "LinuxDo Topic";
+        // 移除后缀 " - Linux Do" 或 " - IDCFlare" 等后缀
+        return pageTitle.split(' - ')[0].trim() || document.querySelector('.fancy-title')?.innerText.trim() || "Topic";
     }
     
     function getTopicUrl() {
